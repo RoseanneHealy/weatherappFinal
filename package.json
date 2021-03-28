@@ -1,0 +1,17 @@
+{
+  "name": "npm-init-package.json",
+  "version": "1.0.0",
+  "description": "## Overview This project requires you to create an asynchronous web app that uses Web API and user data to dynamically update the UI.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "example",
+    "package.json",
+    "npm",
+    "init"
+  ],
+  "author": "Roseanne Healy",
+  "license": "UNLICENSED"
+}
