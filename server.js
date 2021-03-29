@@ -23,32 +23,26 @@ const port = 3000;
 // Setup Server
 const server = app.listen(port, listening);
 function listening() {
-  //console.log(server);
   console.log(`running on localhost: ${port}`);
 };
 
-//I think below is data storage:
 // Setup empty JS object to act as endpoint for all routes
-projectData = {};
+let projectData = {};
+
 app.get('/all', getData)
 
 function getData(req, res) {
   res.send(projectData)
- console.log(projectData)
 }
 
 //POST ROUTE (posting new info back like zip and users entered feelings)
 app.post('/addNewZip', storingPostedDataFromJS);
 
 function storingPostedDataFromJS(req, res) {
- 
- projectData = req.body;
- // newEntry = req.body;
-
-  //pushing data back in array for app.js to retrieve by fetch/get.
-
-  res.send(projectData)
-  console.log(projectData)
+  newEntry = req.body;
+  projectData = newEntry;
+  console.log(projectData);
+  res.send(projectData);
 }
 
 

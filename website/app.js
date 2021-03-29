@@ -1,6 +1,6 @@
 //values added together equal http route I believe
 let baseURL = 'http://api.openweathermap.org/data/2.5/weather?zip=';
-const apiKey = '&appid=1d3069638ea01c21620211ee9ec5ee3d&units=imperial'; 
+const apiKey = '&appid=1d3069638ea01c21620211ee9ec5ee3d&units=metric';
 const newLocation = document.getElementById('zip').value;
 
 //when generate button is clicked function to get the value of zip and feelings.
@@ -11,12 +11,10 @@ function performAction(e) {
   const feeling = document.getElementById('feelings').value;
   const newLocation = document.getElementById('zip').value;
 
-  //API CALL('/'?) or (url+zip+apikey?)
-  getZipWeatherInfo(baseURL + newLocation + apiKey)
+  getZipWeatherInfo(baseURL + newLocation)
     .then(
-      function (data) {
-        console.log(data)
-        //Add data to POST request(ROUTE AND DATA)/ feeling:feeeling is what user wrote themselves.
+      function (data) {        
+        //Add data to POST request(ROUTE AND DATA)/ feeling:feeling is what user wrote themselves.
         let newDate = createDate();
         postData('/addNewZip', { date: newDate, temp: data.main.temp, content: feeling })
           .then(() => {
@@ -24,24 +22,20 @@ function performAction(e) {
         });
     })
 };
-//using the then keyword we can post our data to server .so we post data and use fetch later to receive it back. to have it appear on page, we need to dynamically update UI to have it on our static webpage.
+//using the then keyword we can post our data to server .so we post data and use fetch later to receive it back. 
+//to have it appear on page, we need to dynamically update UI to have it on our static webpage.
 
 
 
 //async function (async so our code waits to receive back data from server.) which takes base url, zip and API Key.
 const getZipWeatherInfo = async (url) => {
-  //rebuilding our Url into a Fetch call/ As URL AND ZIP AND KEY all combined together./this let's us query a web API.
-  //const res = await fetch(baseURL+zip+key)
+  const res = await fetch(url + apiKey);
   
-  const res = await fetch(url);
-  // try and catch promises/our conditions for it all to pass.
   try {
     const data = await res.json();
-    console.log(data)
     return data;
   } catch (error) {
     console.log("error", error);
-    // appropriately handle the error
   }
 }
 
@@ -51,10 +45,7 @@ const createDate = () => {
   return newDate;
 }
 
-
-
 const postData = async (url = '', data = {}) => {
-  console.log(data)
   const response = await fetch(url, {
     method: 'POST',
     credentials: 'same-origin',
@@ -66,35 +57,23 @@ const postData = async (url = '', data = {}) => {
 
   try {
     const newData = await response.json();
-    console.log(newData);
-    return newData
+    return newData;
   } catch (error) {
     console.log("error", error);
   }
 }
 
-
-
-//UDATING UI/CHANGING STATIC WEBPAGE! updating page with info posted, fetched, posted/(GET) back?
-
 const updateUI = async () => {
   const request = await fetch('/all')
   try {
-    const allData = await request.json()
-    console.log(allData);
-    //selecting elements we want to update (div with date temp and content) variable ALLDATA holds our info in JSON format requested, we want 0 index entry as that is the first entry, we want data, temp, content then :).
-    var lastIndex = allData.length -1;document.getElementById('date').innerHTML = allData[lastIndex].date;
-    document.getElementById('date').innerHTML = allData.date;
-    document.getElementById('temp').innerHTML = Math.round((allData[lastIndex].temp- 273.15) * 9/5 + 32) + "°F";
-    document.getElementById('content').innerHTML = allData[lastIndex].content;
+    const lastEntry = await request.json();
+    console.log(lastEntry);
+
+    document.getElementById('date').innerHTML = lastEntry.date;
+    document.getElementById('temp').innerHTML = lastEntry.temp + " °C";
+    document.getElementById('content').innerHTML = lastEntry.content;
   } catch (error) {
     console.log("error", error);
   }
-} 
+}
 
-
-alert ("hi")
-//references:
-//Udacity videos/mentor help
-//https://www.youtube.com/watch?v=wxbQP1LMZsw&ab_channel=TheCodingTrain
-//document.getElementById('date').innerHTML = allData[lastIndex].date;
